@@ -144,6 +144,13 @@ kbd {
   transform: translateX(18px);
 }
 
+/* 4 条及以上讲点的页面自动缩排，保证不越过字幕条（视觉验收发现的真实溢出场景）。 */
+.points-dense {
+  font-size: 19px;
+  gap: 12px;
+  line-height: 1.5;
+}
+
 .refs {
   color: var(--muted);
   font-family: var(--font-mono);
@@ -217,7 +224,6 @@ kbd {
 
 .narration-text {
   flex: 1 1 auto;
-  text-wrap: balance;
 }
 
 .narration-count {

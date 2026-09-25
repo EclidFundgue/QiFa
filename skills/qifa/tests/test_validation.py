@@ -130,6 +130,9 @@ def cases_contract() -> None:
 def cli_smoke() -> None:
     help_result = run(SCRIPTS / "pipeline.py", "--help")
     assert help_result.returncode == 0, help_result.stderr
+    visual_help = run(SCRIPTS / "visual_audit.py", "--help")
+    assert visual_help.returncode == 0, visual_help.stderr
+    assert "视觉验收" in visual_help.stdout, "visual_audit.py 缺少用途说明"
     with tempfile.TemporaryDirectory() as tmp:
         missing = run(SCRIPTS / "pipeline.py", "validate", "curriculum", tmp)
         assert missing.returncode != 0, "空工作区校验本应失败"
@@ -243,6 +246,27 @@ def stage_scoped_warnings() -> None:
 
 
 @case
+def point_length_rule() -> None:
+    """讲点只放关键词：超过 42 字（公式除外）给 CHAP-TEXT 警告。"""
+    with tempfile.TemporaryDirectory() as tmp:
+        ws = Path(tmp) / "ws"
+        shutil.copytree(FIXTURE, ws)
+        plan_path = ws / "plan" / "chapter-plan-C01.json"
+        plan = json.loads(plan_path.read_text(encoding="utf-8"))
+        plan["slides"][0]["points"][0]["text"] = (
+            "这是一条很长的讲点，它把讲稿里应该说的话全写在了页面上，应当被校验器拦下来提醒改成关键词短语。"
+        )
+        plan_path.write_text(json.dumps(plan, ensure_ascii=False, indent=2), encoding="utf-8")
+        long_run = run(SCRIPTS / "validate_course.py", ws, "--stage", "chapter-design")
+        assert "CHAP-TEXT" in long_run.stdout, long_run.stdout
+
+        plan["slides"][0]["points"][0]["text"] = "关键词短语"
+        plan_path.write_text(json.dumps(plan, ensure_ascii=False, indent=2), encoding="utf-8")
+        ok_run = run(SCRIPTS / "validate_course.py", ws, "--stage", "chapter-design")
+        assert "CHAP-TEXT" not in ok_run.stdout, ok_run.stdout
+
+
+@case
 def sentences_splitter() -> None:
     """字幕拆分器是纯函数，用 Node 直接跑 TypeScript（类型剥离）做单元校验。"""
     node = shutil.which("node")
@@ -254,9 +278,13 @@ def sentences_splitter() -> None:
         + ";\n"
         "const basic = splitSentences('甲。乙！丙？');\n"
         "if (basic.length !== 3) throw new Error('句数应为 3，实际 ' + basic.length);\n"
-        "const long = splitSentences('这是一句很长的中文，它包含了很多个逗号，需要被自动切开，以保证字幕不超过两行显示，这里再加一点内容。');\n"
-        "if (long.length < 2) throw new Error('长句应被切开');\n"
-        "for (const s of long) { if (s.length > 46) throw new Error('句子超过 46 字：' + s); }\n"
+        "const lines = splitSentences('一句话一行，行就是一条字幕。\\n第二行是第二条字幕。');\n"
+        "if (lines.length !== 2) throw new Error('一句话一行应得到 2 条：' + JSON.stringify(lines));\n"
+        "const long = splitSentences('这是一句很长的中文，它包含了很多个逗号，需要被自动切开，以保证字幕不超过两行显示，这里再加一点内容，让它超过八十个字，再补一些字确保够长，还差一点就够八十个字了。');\n"
+        "if (long.length < 2) throw new Error('超过 80 字的行应被兜底切开');\n"
+        "for (const s of long) { if (s.length > 80) throw new Error('字幕超过 80 字：' + s); }\n"
+        "const merged = splitSentences('还有机器人自己的本体状态，也就是关节角、夹爪开合这类低维数字。');\n"
+        "if (merged.length !== 1) throw new Error('80 字以内的句子不得被逗号切碎：' + JSON.stringify(merged));\n"
         "if (splitSentences('   ').length !== 0) throw new Error('空白应返回空数组');\n"
         "console.log('ok');\n"
     )
@@ -287,12 +315,26 @@ def template_layout_contract() -> None:
     app = (root / "App.tsx").read_text(encoding="utf-8")
     for marker in ("app-shell", "course-column", "stage-body", "glossary-backdrop", "onClose"):
         assert marker in app, f"App.tsx 缺少布局契约：{marker}"
+    assert "step={step}" in app, "App.tsx 必须把页内步进传给定制视觉组件"
+    assert "sentence={sentence}" in app and "sentences={sentences}" in app, "App.tsx 必须把当前字幕传给定制视觉组件"
+    custom_index = (root / "content" / "custom" / "index.ts").read_text(encoding="utf-8")
+    assert "step: number" in custom_index, "定制视觉注册表必须声明 step 参数"
+    assert "sentences: string[]" in custom_index, "定制视觉注册表必须声明 sentences 参数"
+    focus_helper = (root / "content" / "custom" / "focus.ts").read_text(encoding="utf-8")
+    assert "neutral" in focus_helper and "focusOf" in focus_helper, "缺少高亮语义工具（有指向才高亮，无指向保持中性）"
+    web_ref = (SKILL / "references" / "web-implementation.md").read_text(encoding="utf-8")
+    assert "高亮语义" in web_ref, "web-implementation.md 必须写明高亮语义"
     stage = (root / "components" / "Stage.tsx").read_text(encoding="utf-8")
     assert "stage-area" in stage and "stage-fitter" in stage, "Stage.tsx 缺少舞台三层结构"
     cursor = (root / "hooks" / "useCourseCursor.ts").read_text(encoding="utf-8")
     assert "splitSentences" in cursor and "sentence" in cursor, "游标缺少逐句逻辑"
     subtitle = (root / "components" / "Subtitle.tsx").read_text(encoding="utf-8")
     assert "narration-count" in subtitle, "字幕缺少句序指示"
+    narration_text = re.search(r"\.narration-text\s*\{[^}]*\}", base)
+    assert narration_text and "text-wrap" not in narration_text.group(0), "字幕不得做两行平衡对齐（一行满自动换行）"
+    renderer = (root / "components" / "SlideRenderer.tsx").read_text(encoding="utf-8")
+    assert "points-dense" in renderer, "密集讲点页必须走缩排渲染"
+    assert ".points-dense" in base, "base.css 缺少密集讲点的缩排规则"
 
 
 def main() -> int:

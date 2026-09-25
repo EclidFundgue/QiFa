@@ -32,7 +32,7 @@ export default function SlideRenderer({ slide, step }: SlideRendererProps) {
     <div>
       <h1 className={slide.kind === "title" ? "slide-title" : "slide-title"}>{slide.title}</h1>
       {slide.kind === "title" && slide.points.length === 0 && <p className="slide-goal" />}
-      <ul className="points">
+      <ul className={slide.points.length > 3 ? "points points-dense" : "points"}>
         {slide.points.map((point, pointIndex) => (
           <li key={`${slide.id}-${pointIndex}`} className={pointIndex >= visibleCount && hasSteps ? "hidden-step" : ""}>
             {point.text}

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -135,6 +136,20 @@ def _check_chapter_plans(
                 problems.append(
                     problem("chapter", "CHAP-EMPTY", "warning", stage, f"{chapter_id}/{slide.get('id')}", "页面没有讲点")
                 )
+            for point in points:
+                visible = re.sub(r"\$[^$]*\$", "", str(point.get("text", "")))
+                visible = re.sub(r"`[^`]*`", "", visible).strip()
+                if len(visible) > 42:
+                    problems.append(
+                        problem(
+                            "chapter",
+                            "CHAP-TEXT",
+                            "warning",
+                            stage,
+                            f"{chapter_id}/{slide.get('id')}",
+                            "讲点过长：页面只放关键词/短语，完整描述交给讲稿",
+                        )
+                    )
             if slide.get("kind") == "code-walkthrough" and not any(p.get("source_refs") for p in points):
                 problems.append(
                     problem(

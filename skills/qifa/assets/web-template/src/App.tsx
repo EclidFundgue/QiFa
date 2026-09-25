@@ -59,7 +59,11 @@ export default function App() {
         <main className="course-column">
           <Stage>
             <div className="stage-body">
-              {Custom ? <Custom slide={current.slide} /> : <SlideRenderer slide={current.slide} step={step} />}
+              {Custom ? (
+                <Custom slide={current.slide} step={step} sentence={sentence} sentences={sentences} />
+              ) : (
+                <SlideRenderer slide={current.slide} step={step} />
+              )}
             </div>
             {showSubtitle && (
               <Subtitle

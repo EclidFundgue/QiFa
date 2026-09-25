@@ -1,0 +1,8 @@
+{
+  "id": "scientific-editorial",
+  "name": "Scientific Editorial",
+  "nameZh": "学术编辑风",
+  "description": "克制、可信、图表优先的学术气质；适合论文精读与研究汇报。",
+  "mood": "严谨、安静、证据感",
+  "bestFor": ["论文精读", "研究汇报", "方法讲解"]
+}

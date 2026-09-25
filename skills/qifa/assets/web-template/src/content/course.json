@@ -1,0 +1,38 @@
+{
+  "course": {
+    "title": "示例课程",
+    "language": "zh-CN",
+    "audience": "示例学习者",
+    "goal": "演示 QiFa 站点模板",
+    "theme": "scientific-editorial",
+    "duration_minutes": 10
+  },
+  "glossary": [],
+  "chapters": [
+    {
+      "id": "C01",
+      "title": "示例章节",
+      "goal": "确认模板可运行",
+      "slides": [
+        {
+          "id": "S01",
+          "title": "这是模板占位数据",
+          "kind": "title",
+          "points": [
+            {
+              "text": "运行 build_site.py 会用真实课程数据覆盖本文件。",
+              "step_id": "",
+              "refs": []
+            }
+          ],
+          "steps": [],
+          "visuals": [],
+          "media_refs": [],
+          "narration": "这是模板占位讲稿。",
+          "custom": "./custom/S01.tsx"
+        }
+      ]
+    }
+  ],
+  "has_degradations": false
+}

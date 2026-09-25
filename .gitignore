@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# QiFa 运行产物（工作区含 presentation/node_modules、dist 与 .qifa 状态）
+qifa-output/
+**/node_modules/
+
+# 测试与工具缓存
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# 编辑器与系统
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# 本地 OpenCode 配置（不要提交个人会话配置）
+.opencode/

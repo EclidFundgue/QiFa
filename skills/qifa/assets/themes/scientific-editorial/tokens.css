@@ -1,0 +1,16 @@
+/* scientific-editorial — 主题 token 契约
+   只覆盖调色板、字体与少量性格旋钮；base.css 提供默认值。 */
+:root {
+  --bg: #f7f5f0;
+  --surface: #fffdf8;
+  --text: #1c1a16;
+  --muted: #6b6558;
+  --accent: #8c2f1f;
+  --accent-2: #1f4e8c;
+  --border: #d9d3c6;
+  --font-heading: "Noto Serif SC", "Source Han Serif SC", Georgia, serif;
+  --font-body: "Noto Sans SC", "Source Han Sans SC", "Helvetica Neue", sans-serif;
+  --font-mono: "JetBrains Mono", Consolas, monospace;
+  --slide-radius: 6px;
+  --shadow: 0 2px 10px rgb(28 26 22 / 8%);
+}

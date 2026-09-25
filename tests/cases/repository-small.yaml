@@ -1,0 +1,20 @@
+name: repository-small
+mode: development
+stop_after: chapter-design
+input:
+  repo: tests/fixtures/repositories/tiny-cli
+config:
+  language: zh-CN
+  duration: 20
+  visual_style: engineering-blueprint
+expect:
+  no_blockers: true
+  stages_done:
+    - intake
+    - source-analysis
+    - curriculum
+    - chapter-design
+  outline:
+    min_chapters: 1
+    max_chapters: 4
+    objectives_covered: true

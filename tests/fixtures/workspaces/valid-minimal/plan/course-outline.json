@@ -1,0 +1,29 @@
+{
+  "course": {
+    "title": "Tiny Paper 解读",
+    "language": "zh-CN",
+    "audience": "有 Python 基础的研究生",
+    "goal": "理解 tiny paper 的方法并对应到 tiny-cli 的实现"
+  },
+  "objectives": [
+    { "id": "O1", "text": "复述方法动机与得分函数", "chapter_ids": ["C01"] },
+    { "id": "O2", "text": "定位实现中的关键函数", "chapter_ids": ["C01"] }
+  ],
+  "prerequisites": ["Python 基础"],
+  "chapters": [
+    {
+      "id": "C01",
+      "title": "方法与实现",
+      "goal": "讲清方法与实现的对应关系",
+      "objective_ids": ["O1", "O2"],
+      "duration_estimate": 5,
+      "source_refs": [{ "source_id": "paper", "kind": "paper", "locator": "§2, p.1" }],
+      "slides": [
+        { "id": "S01", "title": "方法是什么" },
+        { "id": "S02", "title": "实现对应" },
+        { "id": "S03", "title": "小结" }
+      ]
+    }
+  ],
+  "duration_estimate": 5
+}

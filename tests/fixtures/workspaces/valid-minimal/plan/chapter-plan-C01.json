@@ -1,0 +1,52 @@
+{
+  "chapter_id": "C01",
+  "slides": [
+    {
+      "id": "S01",
+      "title": "方法是什么",
+      "kind": "concept",
+      "points": [
+        {
+          "text": "方法用一个线性得分函数给候选排序。",
+          "source_refs": [{ "source_id": "paper", "kind": "paper", "locator": "Eq.1, p.1" }],
+          "step_id": "st1"
+        },
+        {
+          "text": "得分越高，候选排得越前。",
+          "source_refs": [],
+          "step_id": "st2"
+        }
+      ],
+      "media_refs": [],
+      "steps": [
+        { "id": "st1", "label": "给出得分函数" },
+        { "id": "st2", "label": "解释排序含义" }
+      ],
+      "notes": ""
+    },
+    {
+      "id": "S02",
+      "title": "实现对应",
+      "kind": "code-walkthrough",
+      "points": [
+        {
+          "text": "greet() 实现了最简的输入到输出映射。",
+          "source_refs": [{ "source_id": "repo", "kind": "code", "locator": "greet.py:greet" }],
+          "step_id": ""
+        }
+      ],
+      "media_refs": [],
+      "steps": [],
+      "notes": ""
+    },
+    {
+      "id": "S03",
+      "title": "小结",
+      "kind": "summary",
+      "points": [{ "text": "方法与实现一一对应，入口在 main()。", "source_refs": [] }],
+      "media_refs": [],
+      "steps": [],
+      "notes": ""
+    }
+  ]
+}

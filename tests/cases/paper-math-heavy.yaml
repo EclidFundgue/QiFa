@@ -1,0 +1,18 @@
+name: paper-math-heavy
+mode: development
+stop_after: narrative
+input:
+  paper: tests/fixtures/papers/tiny-paper.tex
+config:
+  language: zh-CN
+  duration: 45
+  depth: deep
+  visual_style: scientific-editorial
+expect:
+  no_blockers: true
+  stages_done:
+    - intake
+    - source-analysis
+    - curriculum
+    - chapter-design
+    - narrative

@@ -1,0 +1,4 @@
+interface:
+  display_name: "QiFa"
+  short_description: "把论文或代码库做成 PPT 式可视化讲解课件，含讲稿与自动质检"
+  default_prompt: "使用 $qifa 把这篇论文做成一套 60 分钟的 PPT 式讲解课件，面向有 Python 基础的研究生。"

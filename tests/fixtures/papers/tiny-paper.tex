@@ -1,0 +1,40 @@
+\documentclass{article}
+\title{Tiny Paper: A Minimal Example}
+\author{QiFa Fixtures}
+\date{2026}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+This tiny paper exists only as a fixture for QiFa tests. It proposes a
+scoring function that ranks candidate answers by a simple linear rule.
+
+\section{Method}
+Given a candidate $x$ with features $f(x)$, the score is
+\begin{equation}
+s(x) = w^\top f(x) + b .
+\label{eq:score}
+\end{equation}
+Figure~\ref{fig:arch} shows the two-stage pipeline: features are extracted
+first, then scored. Table~\ref{tab:results} reports the fixture numbers.
+
+\begin{figure}[h]
+  \centering
+  \fbox{features -> score -> rank}
+  \caption{Two-stage scoring pipeline.}
+  \label{fig:arch}
+\end{figure}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{lc}
+    Method & Score \\
+    Baseline & 0.50 \\
+    Ours & 0.62 \\
+  \end{tabular}
+  \caption{Fixture results.}
+  \label{tab:results}
+\end{table}
+
+\end{document}

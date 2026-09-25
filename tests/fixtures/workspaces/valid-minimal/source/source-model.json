@@ -1,0 +1,44 @@
+{
+  "sources": [
+    {
+      "type": "paper",
+      "id": "paper",
+      "origin": "../../papers/tiny-paper.tex",
+      "title": "Tiny Paper: A Minimal Example",
+      "sections": [
+        { "id": "§1", "title": "Introduction", "page": 1 },
+        { "id": "§2", "title": "Method", "page": 1 }
+      ],
+      "figures": [{ "id": "Fig.1", "title": "Two-stage scoring pipeline", "page": 1 }],
+      "equations": [{ "id": "Eq.1", "title": "Linear score", "page": 1 }],
+      "tables": [{ "id": "Tab.1", "title": "Fixture results", "page": 1 }]
+    },
+    {
+      "type": "repo",
+      "id": "repo",
+      "origin": "../../repositories/tiny-cli",
+      "title": "tiny-cli",
+      "code": {
+        "files": ["main.py", "greet.py"],
+        "entrypoints": ["main.py:main"],
+        "symbols": ["main.py:main", "greet.py:greet"],
+        "dataflow": [{ "from": "main.py:main", "to": "greet.py:greet", "notes": "入口调用问候逻辑" }]
+      }
+    },
+    {
+      "type": "media",
+      "id": "media",
+      "origin": "poster.svg",
+      "title": "示意图"
+    }
+  ],
+  "relevance": {
+    "relation": "related",
+    "mapping": [
+      { "paper_section": "§2", "code_paths": ["greet.py:greet"], "notes": "方法对应到实现" }
+    ]
+  },
+  "glossary": [
+    { "term": "score", "translation": "得分", "definition": "方法中用于排序候选的数值。" }
+  ]
+}

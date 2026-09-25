@@ -1,0 +1,53 @@
+{
+  "generated_at": "2026-09-25T14:33:53",
+  "mode": "production",
+  "summary": {
+    "blockers": 0,
+    "warnings": 3,
+    "infos": 0,
+    "degradations": 0
+  },
+  "items": [
+    {
+      "layer": "pedagogy",
+      "rule_id": "PED-DURATION",
+      "severity": "warning",
+      "stage": "narrative",
+      "target": "plan/course-outline.json",
+      "message": "大纲声明 5 分钟，讲稿换算 3 分钟，差异超过 1.5 分钟",
+      "remediation": "按讲稿重算每章 duration_estimate",
+      "status": "open"
+    },
+    {
+      "layer": "pedagogy",
+      "rule_id": "PED-DURATION",
+      "severity": "warning",
+      "stage": "narrative",
+      "target": "script/",
+      "message": "讲稿换算 3 分钟，目标 20 分钟，偏差 85% 超过容差 30%",
+      "remediation": "",
+      "status": "open"
+    },
+    {
+      "layer": "web",
+      "rule_id": "WEB-DATA",
+      "severity": "warning",
+      "stage": "web-generation",
+      "target": "presentation/src/content/narrations.json",
+      "message": "缺少 narrations.json",
+      "remediation": "",
+      "status": "open"
+    }
+  ],
+  "duration": {
+    "per_chapter": [
+      {
+        "chapter_id": "C01",
+        "chars": 680,
+        "words": 27,
+        "minutes": 3.0
+      }
+    ],
+    "total": 3.0
+  }
+}

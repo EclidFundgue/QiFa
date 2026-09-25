@@ -1,0 +1,8 @@
+{
+  "id": "engineering-blueprint",
+  "name": "Engineering Blueprint",
+  "nameZh": "工程蓝图风",
+  "description": "深底冷色、代码优先、信息密度高的工程气质；适合代码库与系统讲解。",
+  "mood": "冷静、精确、结构感",
+  "bestFor": ["代码库入门", "架构讲解", "系统设计"]
+}

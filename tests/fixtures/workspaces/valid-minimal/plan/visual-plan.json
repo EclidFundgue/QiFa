@@ -1,0 +1,12 @@
+{
+  "items": [
+    {
+      "id": "V01",
+      "slide_id": "S01",
+      "type": "diagram",
+      "purpose": "展示得分函数的输入输出与排序位置",
+      "source_refs": [{ "source_id": "paper", "kind": "paper", "locator": "Fig.1, p.1" }],
+      "asset": "poster.svg"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "QiFa chapter plan",
+  "description": "章节内结构：chapter 到 slide 到 step；每个讲点的可选来源引用。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["chapter_id", "slides"],
+  "properties": {
+    "chapter_id": { "type": "string", "pattern": "^C[0-9]+$" },
+    "slides": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "kind", "points", "media_refs", "steps"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^S[0-9]+$" },
+          "title": { "type": "string", "minLength": 1 },
+          "kind": {
+            "enum": ["title", "concept", "diagram", "code-walkthrough", "formula-steps", "video", "comparison", "summary"]
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["text", "source_refs"],
+              "properties": {
+                "text": { "type": "string", "minLength": 1 },
+                "source_refs": { "type": "array", "items": { "$ref": "#/$defs/source_ref" } },
+                "step_id": { "type": "string" }
+              }
+            }
+          },
+          "media_refs": { "type": "array", "items": { "type": "string" } },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "label"],
+              "properties": {
+                "id": { "type": "string", "minLength": 1 },
+                "label": { "type": "string", "minLength": 1 }
+              }
+            }
+          },
+          "notes": { "type": "string" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "source_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "locator", "kind"],
+      "properties": {
+        "source_id": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["paper", "code", "media"] },
+        "locator": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

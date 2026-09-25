@@ -1,0 +1,8 @@
+id: code-onboarding
+title: 代码库入门课程
+audience: 需要快速上手仓库的新同学或协作开发者
+level: intermediate
+depth: intermediate
+visual_style: engineering-blueprint
+duration_minutes: 45
+description: 单仓库：产品目标、架构地图、主调用链、关键符号与扩展点。

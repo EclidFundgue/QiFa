@@ -1,0 +1,8 @@
+id: research-course
+title: 论文精读课程
+audience: 有相关领域基础的研究生或工程师
+level: advanced
+depth: deep
+visual_style: scientific-editorial
+duration_minutes: 45
+description: 单篇论文或论文+官方实现：研究问题、方法、公式、实验证据与复现路径。

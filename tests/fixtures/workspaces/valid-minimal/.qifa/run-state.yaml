@@ -1,0 +1,75 @@
+mode: production
+stage: automated-review
+stages:
+  intake:
+    status: validated
+    attempts: 0
+    artifacts:
+      - project.yaml
+      - 00-intake.md
+    checks:
+      - validate_stage
+    degradations: []
+  source-analysis:
+    status: validated
+    attempts: 0
+    artifacts:
+      - source/source-model.json
+    checks:
+      - validate_stage
+      - validate_sources
+    degradations: []
+  curriculum:
+    status: validated
+    attempts: 0
+    artifacts:
+      - plan/course-outline.json
+    checks:
+      - validate_course
+    degradations: []
+  chapter-design:
+    status: validated
+    attempts: 0
+    artifacts:
+      - plan/chapter-plan-C01.json
+    checks:
+      - validate_course
+    degradations: []
+  narrative:
+    status: validated
+    attempts: 0
+    artifacts:
+      - script/01-C01.md
+    checks:
+      - validate_course
+    degradations: []
+  visual-storyboard:
+    status: validated
+    attempts: 0
+    artifacts:
+      - plan/visual-plan.json
+    checks:
+      - validate_course
+    degradations: []
+  web-generation:
+    status: validated
+    attempts: 0
+    artifacts:
+      - presentation/package.json
+      - presentation/src/content/course.json
+    checks:
+      - check_site
+    degradations: []
+  automated-review:
+    status: pending
+    attempts: 0
+    artifacts: []
+    checks: []
+    degradations: []
+  package:
+    status: pending
+    attempts: 0
+    artifacts: []
+    checks: []
+    degradations: []
+warnings: []

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "QiFa run state",
+  "description": "工作区唯一可变状态文件；阶段状态、修复次数、产物与降级记录。不含版本与哈希字段。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["mode", "stage", "stages", "warnings"],
+  "properties": {
+    "mode": { "enum": ["production", "development"] },
+    "stage": { "type": "string", "minLength": 1 },
+    "stages": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/stage_state" }
+    },
+    "warnings": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "stage_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "attempts", "artifacts", "checks", "degradations"],
+      "properties": {
+        "status": { "enum": ["pending", "in_progress", "validated", "degraded", "failed", "skipped"] },
+        "attempts": { "type": "integer", "minimum": 0 },
+        "started_at": { "type": "string" },
+        "finished_at": { "type": "string" },
+        "artifacts": { "type": "array", "items": { "type": "string" } },
+        "checks": { "type": "array", "items": { "type": "string" } },
+        "degradations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["code", "message"],
+            "properties": {
+              "code": { "type": "string", "minLength": 1 },
+              "message": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

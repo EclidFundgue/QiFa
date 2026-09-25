@@ -1,0 +1,15 @@
+/* classroom-clean — 主题 token 契约 */
+:root {
+  --bg: #ffffff;
+  --surface: #f4f8ff;
+  --text: #1f2933;
+  --muted: #6b7684;
+  --accent: #e8734a;
+  --accent-2: #2f7fd1;
+  --border: #e3e8ef;
+  --font-heading: "Noto Sans SC", "PingFang SC", "Helvetica Neue", sans-serif;
+  --font-body: "Noto Sans SC", "PingFang SC", "Helvetica Neue", sans-serif;
+  --font-mono: "JetBrains Mono", Consolas, monospace;
+  --slide-radius: 14px;
+  --shadow: 0 6px 24px rgb(31 41 51 / 10%);
+}

@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "QiFa project",
+  "description": "单次运行的配置快照；由 pipeline.py init 生成后不再改写（约定）。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["mode", "interaction", "input", "learner", "goal", "language", "duration", "depth", "visual_style", "output", "policies"],
+  "properties": {
+    "mode": { "enum": ["production", "development"] },
+    "interaction": { "enum": ["upfront-only", "stage-review"] },
+    "stop_after": {
+      "type": "string",
+      "description": "development 模式下的停止阶段；production 模式不得设置。"
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "paper": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "origin"],
+          "properties": {
+            "kind": { "enum": ["pdf", "arxiv", "latex-source", "latex-project", "docx", "webpage"] },
+            "origin": { "type": "string", "minLength": 1 }
+          }
+        },
+        "repo": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "origin"],
+          "properties": {
+            "kind": { "enum": ["local", "git"] },
+            "origin": { "type": "string", "minLength": 1 }
+          }
+        },
+        "media": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "learner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["audience", "level", "prerequisites"],
+      "properties": {
+        "audience": { "type": "string", "minLength": 1 },
+        "level": { "enum": ["beginner", "intermediate", "advanced"] },
+        "prerequisites": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "goal": { "type": "string", "minLength": 1 },
+    "language": { "type": "string", "minLength": 2 },
+    "duration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_minutes"],
+      "properties": {
+        "target_minutes": { "type": "integer", "minimum": 5, "maximum": 600 }
+      }
+    },
+    "depth": { "enum": ["overview", "intermediate", "deep"] },
+    "visual_style": { "enum": ["scientific-editorial", "engineering-blueprint", "classroom-clean"] },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workspace"],
+      "properties": { "workspace": { "type": "string", "minLength": 1 } }
+    },
+    "policies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_repair_attempts", "on_soft_failure", "on_hard_failure", "auto_install", "duration_tolerance"],
+      "properties": {
+        "max_repair_attempts": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "on_soft_failure": { "enum": ["continue-and-report"] },
+        "on_hard_failure": { "enum": ["stop"] },
+        "auto_install": { "type": "boolean" },
+        "duration_tolerance": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "speaking_rate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["zh_chars_per_minute", "en_words_per_minute"],
+      "properties": {
+        "zh_chars_per_minute": { "type": "number", "minimum": 60, "maximum": 600 },
+        "en_words_per_minute": { "type": "number", "minimum": 40, "maximum": 300 }
+      }
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "course": {
+    "title": "Tiny Paper 解读",
+    "language": "zh-CN",
+    "audience": "有 Python 基础的研究生",
+    "goal": "理解 tiny paper 的方法并对应到 tiny-cli 的实现",
+    "theme": "scientific-editorial",
+    "duration_minutes": 20
+  },
+  "glossary": [
+    { "term": "score", "translation": "得分", "definition": "方法中用于排序候选的数值。" }
+  ],
+  "chapters": [
+    {
+      "id": "C01",
+      "title": "方法与实现",
+      "goal": "讲清方法与实现的对应关系",
+      "slides": [
+        {
+          "id": "S01",
+          "title": "方法是什么",
+          "kind": "concept",
+          "points": [
+            {
+              "text": "方法用一个线性得分函数给候选排序。",
+              "step_id": "st1",
+              "refs": [{ "kind": "paper", "locator": "Eq.1, p.1", "source_id": "paper" }]
+            }
+          ],
+          "steps": [
+            { "id": "st1", "label": "给出得分函数" },
+            { "id": "st2", "label": "解释排序含义" }
+          ],
+          "visuals": [
+            {
+              "id": "V01",
+              "type": "diagram",
+              "purpose": "展示得分函数的输入输出与排序位置",
+              "asset": "media/poster.svg",
+              "refs": [{ "kind": "paper", "locator": "Fig.1, p.1", "source_id": "paper" }]
+            }
+          ],
+          "media_refs": ["media/poster.svg"],
+          "narration": "我们从一个很朴素的问题开始：给定一堆候选答案，怎么决定谁排前面。",
+          "custom": "./custom/S01.tsx"
+        },
+        {
+          "id": "S02",
+          "title": "实现对应",
+          "kind": "code-walkthrough",
+          "points": [
+            {
+              "text": "greet() 实现了最简的输入到输出映射。",
+              "step_id": "",
+              "refs": [{ "kind": "code", "locator": "greet.py:greet", "source_id": "repo" }]
+            }
+          ],
+          "steps": [],
+          "visuals": [],
+          "media_refs": [],
+          "narration": "现在把目光转到代码。tiny-cli 里的 greet() 只有一个职责。",
+          "custom": "./custom/S02.tsx"
+        },
+        {
+          "id": "S03",
+          "title": "小结",
+          "kind": "summary",
+          "points": [{ "text": "方法与实现一一对应，入口在 main()。", "step_id": "", "refs": [] }],
+          "steps": [],
+          "visuals": [],
+          "media_refs": [],
+          "narration": "这一章我们讲了两件事。",
+          "custom": "./custom/S03.tsx"
+        }
+      ]
+    }
+  ],
+  "has_degradations": false
+}

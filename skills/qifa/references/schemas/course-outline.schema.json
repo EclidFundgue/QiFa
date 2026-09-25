@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "QiFa course outline",
+  "description": "课程大纲：学习目标、先修知识、章节划分与时长预算。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["course", "objectives", "prerequisites", "chapters", "duration_estimate"],
+  "properties": {
+    "course": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "language", "audience", "goal"],
+      "properties": {
+        "title": { "type": "string", "minLength": 1 },
+        "language": { "type": "string", "minLength": 2 },
+        "audience": { "type": "string", "minLength": 1 },
+        "goal": { "type": "string", "minLength": 1 }
+      }
+    },
+    "objectives": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "text", "chapter_ids"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^O[0-9]+$" },
+          "text": { "type": "string", "minLength": 1 },
+          "chapter_ids": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "prerequisites": { "type": "array", "items": { "type": "string" } },
+    "chapters": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "goal", "objective_ids", "duration_estimate", "source_refs", "slides"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^C[0-9]+$" },
+          "title": { "type": "string", "minLength": 1 },
+          "goal": { "type": "string", "minLength": 1 },
+          "objective_ids": { "type": "array", "items": { "type": "string" } },
+          "duration_estimate": { "type": "number", "minimum": 1 },
+          "source_refs": { "type": "array", "items": { "$ref": "#/$defs/source_ref" } },
+          "slides": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "title"],
+              "properties": {
+                "id": { "type": "string", "minLength": 1 },
+                "title": { "type": "string", "minLength": 1 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "duration_estimate": { "type": "number", "minimum": 1 }
+  },
+  "$defs": {
+    "source_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "locator", "kind"],
+      "properties": {
+        "source_id": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["paper", "code", "media"] },
+        "locator": {
+          "type": "string",
+          "minLength": 1,
+          "description": "论文用编号与页码（如 Fig.2, p.7）；代码用 path:符号（如 pkg/mod.py:func）。"
+        }
+      }
+    }
+  }
+}

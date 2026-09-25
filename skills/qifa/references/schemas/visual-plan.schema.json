@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "QiFa visual plan",
+  "description": "视觉登记表：每个图示、动画、视频必须有明确教学目的（登记制，不设数量配额）。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["items"],
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "slide_id", "type", "purpose", "source_refs", "asset"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "slide_id": { "type": "string", "pattern": "^S[0-9]+$" },
+          "type": {
+            "enum": ["animation", "diagram", "chart", "code-walkthrough", "formula-steps", "video", "image", "terminal-sim"]
+          },
+          "purpose": {
+            "type": "string",
+            "minLength": 1,
+            "description": "教学目的：这个视觉帮学习者理解什么？说不清就不得进课件。"
+          },
+          "source_refs": { "type": "array", "items": { "$ref": "#/$defs/source_ref" } },
+          "asset": { "type": "string" },
+          "duration_estimate": { "type": "number", "minimum": 0 }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "source_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "locator", "kind"],
+      "properties": {
+        "source_id": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["paper", "code", "media"] },
+        "locator": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

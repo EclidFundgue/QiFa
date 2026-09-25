@@ -1,0 +1,14 @@
+name: repository-fullstack
+mode: development
+stop_after: source-analysis
+input:
+  repo: tests/fixtures/repositories/tiny-cli
+config:
+  language: zh-CN
+  duration: 45
+  visual_style: engineering-blueprint
+expect:
+  no_blockers: true
+  stages_done:
+    - intake
+    - source-analysis

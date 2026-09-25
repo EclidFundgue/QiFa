@@ -1,0 +1,19 @@
+name: paper-basic
+mode: development
+stop_after: curriculum
+input:
+  paper: tests/fixtures/papers/tiny-paper.tex
+config:
+  language: zh-CN
+  duration: 20
+  visual_style: scientific-editorial
+expect:
+  no_blockers: true
+  stages_done:
+    - intake
+    - source-analysis
+    - curriculum
+  outline:
+    min_chapters: 1
+    max_chapters: 4
+    objectives_covered: true

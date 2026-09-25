@@ -1,0 +1,31 @@
+mode: production
+interaction: upfront-only
+input:
+  paper:
+    kind: latex-source
+    origin: ../../papers/tiny-paper.tex
+  repo:
+    kind: local
+    origin: ../../repositories/tiny-cli
+learner:
+  audience: 有 Python 基础的研究生
+  level: intermediate
+  prerequisites:
+    - Python 基础
+goal: 理解 tiny paper 的方法并对应到 tiny-cli 的实现
+language: zh-CN
+duration:
+  target_minutes: 20
+depth: intermediate
+visual_style: scientific-editorial
+output:
+  workspace: .
+policies:
+  max_repair_attempts: 2
+  on_soft_failure: continue-and-report
+  on_hard_failure: stop
+  auto_install: true
+  duration_tolerance: 0.3
+speaking_rate:
+  zh_chars_per_minute: 240
+  en_words_per_minute: 130

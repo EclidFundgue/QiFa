@@ -1,0 +1,63 @@
+{
+  "chapter_id": "C01",
+  "slides": [
+    {
+      "id": "S01",
+      "title": "这门课验证什么",
+      "kind": "title",
+      "points": [
+        { "text": "这节最小课程只做一件事：验证流水线。", "source_refs": [] },
+        { "text": "每个阶段都要产出结构正确、引用真实的文件。", "source_refs": [] }
+      ],
+      "media_refs": [],
+      "steps": []
+    },
+    {
+      "id": "S02",
+      "title": "tiny 仓库只有两个函数",
+      "kind": "concept",
+      "points": [
+        { "text": "入口 run 接收输入，helper 做实际计算。", "source_refs": [] },
+        { "text": "小结构也能演示问题、结构、路径的讲解顺序。", "source_refs": [] }
+      ],
+      "media_refs": [],
+      "steps": []
+    },
+    {
+      "id": "S03",
+      "title": "run 如何调用 helper",
+      "kind": "code-walkthrough",
+      "points": [
+        {
+          "text": "run 把参数原样传给 helper，再返回结果。",
+          "source_refs": [
+            { "source_id": "tiny", "locator": "pkg/main.py:run", "kind": "code" }
+          ]
+        },
+        {
+          "text": "helper 只做一次加法，没有隐藏分支。",
+          "source_refs": [
+            { "source_id": "tiny", "locator": "pkg/main.py:helper", "kind": "code" }
+          ],
+          "step_id": "step2"
+        }
+      ],
+      "media_refs": [],
+      "steps": [
+        { "id": "step1", "label": "读 run 的签名与返回" },
+        { "id": "step2", "label": "跟着调用看 helper 的实现" }
+      ]
+    },
+    {
+      "id": "S04",
+      "title": "小结与下一步",
+      "kind": "summary",
+      "points": [
+        { "text": "引用指向真实符号，锚点与页面一一对应。", "source_refs": [] },
+        { "text": "换成真实仓库时，按同样的顺序展开。", "source_refs": [] }
+      ],
+      "media_refs": [],
+      "steps": []
+    }
+  ]
+}

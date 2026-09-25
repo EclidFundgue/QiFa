@@ -109,6 +109,9 @@ def _check_chapter_plans(
     }
     for chapter_id, expected in outline_slides.items():
         if chapter_id not in plans:
+            # chapter-design 之前不评估章节计划是否存在——它本来就还没到产出时机。
+            if STAGES.index(stage) < STAGES.index("chapter-design"):
+                continue
             severity = "blocker" if stage in DEEP_STAGES else "warning"
             problems.append(
                 problem("chapter", "CHAP-MISSING", severity, stage, chapter_id, f"缺少章节计划：{chapter_id}")

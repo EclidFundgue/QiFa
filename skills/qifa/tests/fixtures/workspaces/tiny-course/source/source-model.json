@@ -1,0 +1,33 @@
+{
+  "sources": [
+    {
+      "type": "repo",
+      "id": "tiny",
+      "origin": "source/tiny-repo",
+      "title": "tiny 仓库（fixture）",
+      "code": {
+        "files": ["pkg/main.py"],
+        "entrypoints": ["pkg/main.py:run"],
+        "symbols": ["pkg/main.py:run", "pkg/main.py:helper"],
+        "dataflow": [
+          {
+            "from": "pkg/main.py:run",
+            "to": "pkg/main.py:helper",
+            "notes": "run 把输入交给 helper，并把结果原样返回。"
+          }
+        ]
+      }
+    }
+  ],
+  "relevance": {
+    "relation": "not-applicable",
+    "mapping": []
+  },
+  "glossary": [
+    {
+      "term": "policy",
+      "translation": "策略",
+      "definition": "从观测产生动作的模型或函数。"
+    }
+  ]
+}

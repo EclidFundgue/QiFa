@@ -1,0 +1,14 @@
+{
+  "items": [
+    {
+      "id": "V1",
+      "slide_id": "S03",
+      "type": "code-walkthrough",
+      "purpose": "展示 run 到 helper 的两步调用关系，让初学者能跟着符号读代码。",
+      "source_refs": [
+        { "source_id": "tiny", "locator": "pkg/main.py:run", "kind": "code" }
+      ],
+      "asset": ""
+    }
+  ]
+}

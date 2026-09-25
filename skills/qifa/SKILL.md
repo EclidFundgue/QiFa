@@ -63,6 +63,7 @@ python3 <skill>/scripts/pipeline.py advance  --stage <stage>
 - `assets/presets/`：`research-course`、`code-onboarding`、`beginner-tutorial` 三套预设。
 - `assets/themes/`：`scientific-editorial`（默认）、`engineering-blueprint`、`classroom-clean`。
 - `assets/web-template/`：精简 Vite + React + TS 底座（16:9 舞台、slide/step 游标、字幕层、token 契约）。
+- `tests/`：P0 回归（`test_validation.py` + `fixtures/workspaces/`，零 LLM 零网络）与 P1 案例（`cases/*.yaml`、`expected-invariants/`）。
 
 ## 维护
 

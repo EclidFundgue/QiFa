@@ -343,6 +343,12 @@ def cmd_init(args) -> int:
         print(f"工作区已创建：{ws_root}")
         print(f"模式：{mode}；时长目标：{duration} 分钟；语言：{project['language']}；风格：{project['visual_style']}")
         print(f"依赖：{dep_result['status']} - {dep_result['detail']}")
+        if dep_result["status"] != "current":
+            print(
+                f"提示：本次与后续命令都在调用方解释器下运行（{sys.executable}），"
+                f"默认使用内置 miniyaml/minischema；如需完整 jsonschema 语义，"
+                f"请激活 {paths.venv_dir()} 后再运行 pipeline.py。"
+            )
     return 0
 
 

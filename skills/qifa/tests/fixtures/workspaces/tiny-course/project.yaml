@@ -1,0 +1,28 @@
+mode: production
+interaction: upfront-only
+input:
+  repo:
+    kind: local
+    origin: source/tiny-repo
+learner:
+  audience: "测试学习者"
+  level: beginner
+  prerequisites:
+    - "无"
+goal: "验证 QiFa 确定性校验与站点构建"
+language: zh-CN
+duration:
+  target_minutes: 5
+depth: overview
+visual_style: classroom-clean
+output:
+  workspace: "."
+policies:
+  max_repair_attempts: 2
+  on_soft_failure: continue-and-report
+  on_hard_failure: stop
+  auto_install: false
+  duration_tolerance: 0.3
+speaking_rate:
+  zh_chars_per_minute: 240
+  en_words_per_minute: 130

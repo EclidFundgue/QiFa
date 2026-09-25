@@ -43,6 +43,12 @@ python3 <skill>/scripts/pipeline.py advance  --stage <stage>
 
 `advance` 内部先校验：通过 → 该阶段 `validated`、游标推进；不通过 → `attempts + 1` 并停在原阶段，Agent 按问题清单修复后重试。`attempts` 超过 `policies.max_repair_attempts`（默认 2）后该阶段标记 `failed`，**终止运行**并在报告中说明。
 
+## 解释器与依赖
+
+- 脚本**始终在调用方解释器**下运行，默认只依赖标准库（内置 `miniyaml` / `minischema`，覆盖 QiFa 全部 schema 子集）——这是正常路径，不是降级。
+- `init` 默认会尝试在平台缓存目录建 venv 并安装 pyyaml + jsonschema；该 venv **不会自动接管后续命令**。需要完整 jsonschema 语义时，先激活 venv，再用其中的 python 运行 `pipeline.py`。
+- 依赖安装失败或 `--no-install` 都不阻塞流程，只在 `init` 输出与日志中标注。
+
 ## 修复与降级
 
 - `blocker`：结构/schema 失败、引用指向不存在、链接断、资源缺失、构建失败。必须修；修不动则终止。

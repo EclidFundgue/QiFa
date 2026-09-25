@@ -1,16 +1,15 @@
-/* scientific-editorial — 主题 token 契约
-   只覆盖调色板、字体与少量性格旋钮；base.css 提供默认值。 */
+/* scientific-editorial theme tokens */
 :root {
-  --bg: #f7f5f0;
-  --surface: #fffdf8;
-  --text: #1c1a16;
-  --muted: #6b6558;
-  --accent: #8c2f1f;
-  --accent-2: #1f4e8c;
-  --border: #d9d3c6;
+  --bg: #f4f7f9;
+  --surface: #fbfcfd;
+  --text: #18222d;
+  --muted: #607080;
+  --accent: #267078;
+  --accent-2: #4d8b91;
+  --border: #d6e0e5;
   --font-heading: "Noto Serif SC", "Source Han Serif SC", Georgia, serif;
-  --font-body: "Noto Sans SC", "Source Han Sans SC", "Helvetica Neue", sans-serif;
+  --font-body: ui-sans-serif, "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
   --font-mono: "JetBrains Mono", Consolas, monospace;
-  --slide-radius: 6px;
-  --shadow: 0 2px 10px rgb(28 26 22 / 8%);
+  --slide-radius: 12px;
+  --shadow: 0 18px 48px rgb(24 34 45 / 12%);
 }

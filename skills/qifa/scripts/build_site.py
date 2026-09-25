@@ -68,7 +68,15 @@ def build(ws: Workspace, npm_build: bool = False) -> list[dict]:
         return [problem("web", "WEB-TEMPLATE", "blocker", STAGE, "assets/web-template", "缺少站点模板")]
 
     presentation = ws.root / "presentation"
-    shutil.copytree(template, presentation, dirs_exist_ok=True)
+    custom_dir = presentation / "src" / "content" / "custom"
+
+    def _ignore(directory: str, names: list[str]) -> list[str]:
+        # 已生成的定制组件属于 Agent 的产物，重复 build 不得覆盖。
+        if custom_dir.is_dir() and Path(directory) == template / "src" / "content":
+            return ["custom"]
+        return []
+
+    shutil.copytree(template, presentation, dirs_exist_ok=True, ignore=_ignore)
 
     project = ws.load_project() or {}
     outline = ws.load_outline()

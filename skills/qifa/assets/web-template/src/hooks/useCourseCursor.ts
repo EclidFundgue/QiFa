@@ -1,10 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
+import { splitSentences } from "../content/sentences";
 import type { SlideWithChapter } from "../types";
 
 const STORAGE_KEY = "qifa-cursor";
 
 function maxStep(slide: SlideWithChapter | undefined): number {
   return Math.max(0, (slide?.slide.steps.length ?? 0) - 1);
+}
+
+/** 一页的讲稿拆成句；空讲稿也保留一个空句，保证游标逻辑简单。 */
+function sentencesOf(slide: SlideWithChapter | undefined): string[] {
+  const list = splitSentences(slide?.slide.narration ?? "");
+  return list.length > 0 ? list : [""];
 }
 
 function readHash(slides: SlideWithChapter[]): number | null {
@@ -28,6 +35,12 @@ function readStorage(): number | null {
   return Number.isFinite(value) && value >= 0 ? value : null;
 }
 
+/**
+ * 课程游标：页（index）+ 句（sentence）+ 额外步（step）。
+ *
+ * 字幕一次只显示一句，一次“下一步”推进一句；句读完后继续推进要点（step），
+ * 要点也到底才翻页。页内的要点按句序成比例展开：讲得越多，露出的要点越多。
+ */
 export function useCourseCursor(slides: SlideWithChapter[]) {
   const [index, setIndex] = useState(() => {
     const fromHash = readHash(slides);
@@ -37,33 +50,51 @@ export function useCourseCursor(slides: SlideWithChapter[]) {
     return 0;
   });
   const [step, setStep] = useState(0);
+  const [sentence, setSentence] = useState(0);
 
   const current = slides[index];
+  const sentences = useMemo(() => sentencesOf(current), [current]);
+  const total = sentences.length;
+  const lastStep = maxStep(current);
+  const derivedStep = lastStep === 0 ? 0 : Math.min(lastStep, Math.floor((sentence * (lastStep + 1)) / total));
+  const visibleStep = Math.min(lastStep, Math.max(step, derivedStep));
 
   const go = (target: number) => {
     if (slides.length === 0) return;
     const clamped = Math.min(Math.max(target, 0), slides.length - 1);
     setIndex(clamped);
     setStep(0);
+    setSentence(0);
   };
 
   const next = () => {
     if (!current) return;
-    if (step < maxStep(current)) {
-      setStep(step + 1);
+    if (sentence < total - 1) {
+      setSentence(sentence + 1);
+      return;
+    }
+    if (visibleStep < lastStep) {
+      setStep(visibleStep + 1);
       return;
     }
     if (index < slides.length - 1) go(index + 1);
   };
 
   const prev = () => {
-    if (step > 0) {
+    if (!current) return;
+    if (step > derivedStep) {
       setStep(step - 1);
       return;
     }
+    if (sentence > 0) {
+      setSentence(sentence - 1);
+      return;
+    }
     if (index > 0) {
+      const target = slides[index - 1];
       setIndex(index - 1);
-      setStep(maxStep(slides[index - 1]));
+      setStep(maxStep(target));
+      setSentence(sentencesOf(target).length - 1);
     }
   };
 
@@ -101,5 +132,5 @@ export function useCourseCursor(slides: SlideWithChapter[]) {
     [index, slides.length]
   );
 
-  return { index, step, current, go, next, prev, progress };
+  return { step: visibleStep, current, go, next, prev, progress, sentence, sentences };
 }

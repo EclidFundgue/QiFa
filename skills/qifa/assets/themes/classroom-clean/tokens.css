@@ -1,15 +1,15 @@
-/* classroom-clean — 主题 token 契约 */
+/* classroom-clean theme tokens */
 :root {
-  --bg: #ffffff;
-  --surface: #f4f8ff;
-  --text: #1f2933;
-  --muted: #6b7684;
-  --accent: #e8734a;
-  --accent-2: #2f7fd1;
-  --border: #e3e8ef;
-  --font-heading: "Noto Sans SC", "PingFang SC", "Helvetica Neue", sans-serif;
-  --font-body: "Noto Sans SC", "PingFang SC", "Helvetica Neue", sans-serif;
+  --bg: #f8fafb;
+  --surface: #fbfcfd;
+  --text: #202a34;
+  --muted: #63717e;
+  --accent: #c9583a;
+  --accent-2: #d8795f;
+  --border: #dce4e8;
+  --font-heading: ui-sans-serif, "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
+  --font-body: ui-sans-serif, "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
   --font-mono: "JetBrains Mono", Consolas, monospace;
   --slide-radius: 14px;
-  --shadow: 0 6px 24px rgb(31 41 51 / 10%);
+  --shadow: 0 18px 48px rgb(32 42 52 / 11%);
 }

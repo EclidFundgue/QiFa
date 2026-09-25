@@ -1,0 +1,17 @@
+name: openpi-repo
+mode: development
+input:
+  repo: /home/ls/projects/openpi
+config:
+  language: zh-CN
+  duration: 45
+  visual_style: engineering-blueprint
+  depth: deep
+  audience: 具备深度学习与机器人学习基础、想复现与微调 π0 系列的研究者
+  goal: 讲清 openpi 的定位、架构与训练/推理主链路，能按论文方法对照代码定位关键模块并完成自定义配置与微调
+  prerequisites: [Python 与 JAX/PyTorch 基础, Transformer 与 flow matching 基本概念, 机器人策略（policy）与动作分块基本术语]
+  policies: {duration_tolerance: 0.3, max_repair_attempts: 2}
+expect:
+  no_blockers: true
+  stages_done: [intake, source-analysis, curriculum, chapter-design, narrative, visual-storyboard, web-generation, automated-review, package]
+  outline: {min_chapters: 5, max_chapters: 7, objectives_covered: true}

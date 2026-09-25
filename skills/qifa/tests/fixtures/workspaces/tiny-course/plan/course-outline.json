@@ -1,0 +1,55 @@
+{
+  "course": {
+    "title": "tiny-course：验证流水线的最小课程",
+    "language": "zh-CN",
+    "audience": "测试学习者",
+    "goal": "验证 QiFa 确定性校验与站点构建"
+  },
+  "objectives": [
+    {
+      "id": "O1",
+      "text": "能说明 tiny 仓库的入口与调用链",
+      "chapter_ids": [
+        "C01"
+      ]
+    }
+  ],
+  "prerequisites": [],
+  "chapters": [
+    {
+      "id": "C01",
+      "title": "从入口到调用链",
+      "goal": "讲清 run 到 helper 的调用关系，并验证引用与讲稿锚点",
+      "objective_ids": [
+        "O1"
+      ],
+      "duration_estimate": 3.9,
+      "source_refs": [
+        {
+          "source_id": "tiny",
+          "locator": "pkg/main.py:run",
+          "kind": "code"
+        }
+      ],
+      "slides": [
+        {
+          "id": "S01",
+          "title": "这门课验证什么"
+        },
+        {
+          "id": "S02",
+          "title": "tiny 仓库只有两个函数"
+        },
+        {
+          "id": "S03",
+          "title": "run 如何调用 helper"
+        },
+        {
+          "id": "S04",
+          "title": "小结与下一步"
+        }
+      ]
+    }
+  ],
+  "duration_estimate": 3.9
+}

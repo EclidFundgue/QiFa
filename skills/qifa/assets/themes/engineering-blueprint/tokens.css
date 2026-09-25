@@ -1,15 +1,15 @@
-/* engineering-blueprint — 主题 token 契约 */
+/* engineering-blueprint theme tokens */
 :root {
-  --bg: #0e1723;
-  --surface: #16243a;
-  --text: #e6edf7;
-  --muted: #93a4bf;
-  --accent: #4da3ff;
-  --accent-2: #7ee0b8;
-  --border: #2b3d59;
-  --font-heading: "Inter", "Noto Sans SC", "Helvetica Neue", sans-serif;
-  --font-body: "Inter", "Noto Sans SC", "Helvetica Neue", sans-serif;
+  --bg: #0c1219;
+  --surface: #151e28;
+  --text: #e8edf2;
+  --muted: #91a1af;
+  --accent: #65b5a6;
+  --accent-2: #8bc9bc;
+  --border: #293640;
+  --font-heading: ui-sans-serif, "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
+  --font-body: ui-sans-serif, "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
   --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
-  --slide-radius: 10px;
-  --shadow: 0 4px 18px rgb(0 0 0 / 35%);
+  --slide-radius: 14px;
+  --shadow: 0 22px 60px rgb(2 7 12 / 44%);
 }

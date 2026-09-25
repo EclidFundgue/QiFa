@@ -1,0 +1,58 @@
+mode: production
+stage: package
+stages:
+  intake:
+    status: validated
+    attempts: 0
+    artifacts: []
+    checks: []
+    degradations: []
+  source-analysis:
+    status: validated
+    attempts: 0
+    artifacts: []
+    checks: []
+    degradations: []
+  curriculum:
+    status: validated
+    attempts: 0
+    artifacts: []
+    checks: []
+    degradations: []
+  chapter-design:
+    status: validated
+    attempts: 0
+    artifacts: []
+    checks: []
+    degradations: []
+  narrative:
+    status: validated
+    attempts: 0
+    artifacts: []
+    checks: []
+    degradations: []
+  visual-storyboard:
+    status: validated
+    attempts: 0
+    artifacts: []
+    checks: []
+    degradations: []
+  web-generation:
+    status: validated
+    attempts: 0
+    artifacts: []
+    checks: []
+    degradations: []
+  automated-review:
+    status: validated
+    attempts: 0
+    artifacts: []
+    checks: []
+    degradations: []
+  package:
+    status: validated
+    attempts: 0
+    artifacts: []
+    checks: []
+    degradations: []
+warnings: []

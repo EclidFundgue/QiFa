@@ -111,7 +111,7 @@ export default function App() {
         <nav className="side-nav" id="course-nav" aria-label="课程导航">
           <header className="nav-header">
             <div>
-              <p>课程大纲</p>
+              <p>大纲</p>
               <span>{course.chapters.length} 章 · {slides.length} 节</span>
             </div>
           </header>

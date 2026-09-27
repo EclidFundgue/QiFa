@@ -34,6 +34,7 @@ license: MIT
 | 主题、视觉与视频嵌入 | `references/visual-design.md` | `validate_course.py` |
 | 网页实现与构建 | `references/web-implementation.md` | `build_site.py`、`check_site.py` |
 | 质检 rubric、严重级与修复 | `references/quality-rubrics.md` | `pipeline.py report` |
+| 定制视觉的高亮判定与检查 | `references/highlight-rules.md` | `highlight_audit.py` |
 | 数据结构 | `references/schemas/*.schema.json` | `validate_stage.py` |
 
 ## 工作流（production）
@@ -59,7 +60,7 @@ python3 <skill>/scripts/pipeline.py advance  --stage <stage>
 
 - `references/`：方法与规则（按路由读取，不必全部加载）。
 - `references/schemas/`：7 个数据结构的 JSON Schema；写产物前先读对应 schema。
-- `scripts/`：`pipeline.py`（状态与编排）、`validate_stage.py`、`validate_sources.py`、`validate_course.py`、`build_site.py`、`check_site.py`、`estimate_duration.py`；`scripts/lib/` 为共享工具。
+- `scripts/`：`pipeline.py`（状态与编排）、`validate_stage.py`、`validate_sources.py`、`validate_course.py`、`build_site.py`、`check_site.py`、`estimate_duration.py`、`visual_audit.py`、`highlight_audit.py`；`scripts/lib/` 为共享工具。
 - `assets/presets/`：`research-course`、`code-onboarding`、`beginner-tutorial` 三套预设。
 - `assets/themes/`：`scientific-editorial`（默认）、`engineering-blueprint`、`classroom-clean`。
 - `assets/web-template/`：精简 Vite + React + TS 底座（16:9 舞台、slide/step 游标、字幕层、token 契约）。

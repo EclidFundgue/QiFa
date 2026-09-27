@@ -22,7 +22,8 @@
   - `sentence` / `sentences` 是当前字幕与整页字幕列表——**图示高亮必须跟随当前这条字幕**（例如字幕讲到“相机+指令”就高亮这两个输入框，讲到“本体状态”就切到状态框）；字幕是拆句后的最小推进单位，也是讲稿的真相源。
   - `step` 是页内要点进度，只用于粗粒度揭示；两者冲突时以字幕为准。
   - 组件不得自行推进游标，也不得硬编码与讲稿不一致的节奏。
-- **高亮语义**（`custom/focus.ts` 的 `focusOf` / `focusStyle`）：`on` = 当前字幕有明确指向时加 accent；`off` = 指向别处时压暗为陪衬；`neutral` = 导入、过渡、总括等没有指向的句子保持原始样式。**禁止“默认全部高亮”或整页常亮**——高亮是突出重点用的，不是装饰。
+- **高亮语义**（`custom/focus.ts` 的 `focusOf` / `focusStyle` / `focusAt`，完整判定与检查清单见 `references/highlight-rules.md`）：`on` = 当前字幕有明确指向时加 accent；`off` = 指向别处时压暗为陪衬；`neutral` = 导入、过渡、总括等没有指向的句子保持原始样式。**禁止“默认全部高亮”或整页常亮**——高亮是突出重点用的，不是装饰。
+- **高亮服从页面结构**：一页承载两个叙事时高亮必然失焦——先按 `chapter-design.md` 拆页，再在页内做高亮。
 - 数据在 `course.json`，代码在 `custom/`；两者都不硬编码讲稿全文（讲稿在 `narrations.json`）。
 
 ## 交互与导航
@@ -51,7 +52,9 @@ python3 -m http.server 8791 --directory dist &
 python3 <skill>/scripts/visual_audit.py <workspace> --out /tmp/qifa-shots
 ```
 
+- 端口被占用会审计到别的站点：脚本带一致性守卫（比对工作区页面标题），不匹配时以退出码 2 终止——先修服务器/构建，不要当成"跳过"。
 - 判定：`.stage-body` 的 `scrollHeight` 必须等于 `clientHeight`（不允许内容区出现内滚）；元素不得越过内容区边界。
+- 定制视觉的高亮按 `references/highlight-rules.md` 单独检查：`python3 <skill>/scripts/highlight_audit.py <workspace>`（重放字幕→焦点序列，0 违规才算过）。
 - 设计画布 1280×720，扣掉页面内边距与字幕区后，**内容区约 1136×552**；定制 TSX 按这个尺寸设计。
 - 4 条及以上讲点的页面由 `SlideRenderer` 自动加 `points-dense` 缩排（历史溢出场景：4 条长讲点被字幕条压住）。
 - 没有浏览器依赖时降级为 `info`，在 qa-report 里注明“未做人工/无头视觉验收”，不阻塞发布。
@@ -63,6 +66,7 @@ python3 <skill>/scripts/visual_audit.py <workspace> --out /tmp/qifa-shots
 ## 无障碍与离线
 
 - 页面 `lang` 与课程语言一致；图片有 `alt`；按钮有可读标签；焦点可见。
+- `index.html` 的 `<title>` 与 `<html lang>` 由 `build_site.py` 按课程大纲写入（课程名 / 课程语言），模板里不写死；侧栏标题用「大纲」，不写「课程大纲」。
 - 不依赖外部 CDN 资源（字体、图标、脚本必须本地或随包构建），保证离线可用。
 - 视频有 poster 与文字替代；颜色对比度满足可读性。
 

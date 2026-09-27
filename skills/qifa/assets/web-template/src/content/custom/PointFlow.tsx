@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import type { Slide } from "../../types";
-import { focusOf } from "./focus";
+import { focusAt, focusOf, STOP } from "./focus";
 
 interface Props {
   slide: Slide;
@@ -34,12 +34,32 @@ function tokens(text: string): string[] {
     .filter((t) => t.length >= 2);
 }
 
+/** 只在某个讲点里出现的 token 才算特征词；被多个讲点共享的通用词（如 "token"）不参与匹配。 */
+function distinctiveTokens(points: { text: string }[]): string[][] {
+  const all = points.map((point) => tokens(point.text));
+  return all.map((list, index) => {
+    const unique = list.filter(
+      (token) => !all.some((other, otherIndex) => otherIndex !== index && other.includes(token))
+    );
+    return unique.length > 0 ? unique : list;
+  });
+}
+
+/** 命中更长的特征词的讲点优先（更具体），平票取靠前的讲点；没有命中返回 null。 */
 function focusIndex(points: { text: string }[], current: string): number | null {
   if (!current) return null;
-  for (let i = 0; i < points.length; i += 1) {
-    if (tokens(points[i].text).some((token) => current.includes(token))) return i;
-  }
-  return null;
+  const lists = distinctiveTokens(points);
+  let best: number | null = null;
+  let bestLength = 0;
+  lists.forEach((list, index) => {
+    list.forEach((token) => {
+      if (current.includes(token) && token.length > bestLength) {
+        best = index;
+        bestLength = token.length;
+      }
+    });
+  });
+  return best;
 }
 
 function splitLabel(text: string): [string, string] {
@@ -63,7 +83,11 @@ function nodeStyle(focus: "neutral" | "on" | "off"): CSSProperties {
 /** 通用示意图：文本页只放关键词，版式按页面类型选（时间线 / 对比列 / 收束链 / 卡片网格）。 */
 export default function PointFlow({ slide, sentence, sentences }: Props) {
   const current = sentences[sentence] ?? "";
-  const hot = focusIndex(slide.points, current);
+  const detect = (text: string) => {
+    if (/下一页|下一章|谢谢/.test(text)) return STOP;
+    return focusIndex(slide.points, text);
+  };
+  const hot = focusAt(sentences, sentence, detect);
   const mode =
     slide.kind === "comparison"
       ? "columns"

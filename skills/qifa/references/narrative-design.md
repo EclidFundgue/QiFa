@@ -25,7 +25,9 @@
 - 课堂口语风格：像在教室里讲课：有"我们来看""这里有个坑""先别急着记公式"这类口语衔接，但不油腻、不贫嘴。
 - 讲代码按设计思路走：这个模块为什么存在 → 它要满足什么约束 → 为什么这样选型 → 最后才是接口与实现。禁止按文件顺序朗读 API。
 - 禁止抽象黑话：能用"做了什么"直说的，就不要用"契约 / 边界 / 赋能 / 抓手"这类日常不用的抽象名词；必须使用的技术术语，第一次出现时先用一句大白话解释。
-- 专业术语第一次出现：给出译名（English 原词）+ 一句定义，之后统一用译名。
+- **领域专业术语直接用英文**：Transformer、flow matching、action expert、KV cache、cross-attention、action chunk、vision encoder、language backbone、tokenizer、state machine、teleoperation、proprioceptive state、episode、benchmark、dataset、policy、pipeline、ablation…一律用英文原词，**不分是否第一次出现**，不写中文译名。
+- **只有论文里出现过的缩写需要"首次出现时展开"**：如 `Continuous Inference（CI）`、`Latent-aware Action Streaming（LAAS）`、`Dynamic Object Manipulation（DOM）`、`Disturbance Robustness（DR）`；论文里没有的缩写不要自造。首次展开后全篇用缩写。
+- 通用叙述词保持中文（推理、延迟、观测、动作、场景、显存、真实机器人…），保证句子读得通；中英文之间留一个空格。
 - 每个新概念遵循"为什么需要 → 是什么 → 怎么用 → 边界"。
 - 公式出现前先用自然语言说清它在算什么；出现后解释每个符号。
 - 复杂处允许放慢（拆成短句），简单处允许一带而过。
@@ -36,6 +38,7 @@
 - 中文 240 字/分钟、英文 130 词/分钟（可在全局配置覆盖）。
 - 每页讲稿参考 = 该页预算分钟 × 语速；整章偏差超过 30% 记 warning。
 - 每页讲稿建议 80–220 字（中文）：能讲 20–55 秒，配合字幕节奏。
+- **展开优先于压缩**：评审要求讲细时就讲透，随后把 `course-outline.json` 的 `duration_estimate` 回填为实测值，并确认总时长仍在容差内（超出则记 warning）。
 
 ## 过渡与节奏
 

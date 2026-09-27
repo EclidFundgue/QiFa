@@ -12,6 +12,8 @@
 
 from __future__ import annotations
 
+from html import escape
+
 import argparse
 import json
 import re
@@ -192,12 +194,28 @@ def build(ws: Workspace, npm_build: bool = False) -> list[dict]:
     }
     io.dump_json(presentation / "src" / "content" / "course.json", course)
     io.dump_json(presentation / "src" / "content" / "narrations.json", narrations)
+    _patch_index_html(
+        presentation,
+        str((outline.get("course") or {}).get("title") or "课程"),
+        str((outline.get("course") or {}).get("language") or project.get("language") or "zh-CN"),
+    )
 
     _write_start_scripts(ws)
 
     if npm_build:
         problems.extend(_run_npm(presentation))
     return problems
+
+
+def _patch_index_html(presentation: Path, title: str, language: str) -> None:
+    """把课程名与语言写进 index.html：<title> 用课程标题，<html lang> 用课程语言（生成时写入，不写死）。"""
+    path = presentation / "index.html"
+    if not path.is_file():
+        return
+    html = path.read_text(encoding="utf-8")
+    html = re.sub(r"<title>.*?</title>", f"<title>{escape(title)}</title>", html, count=1, flags=re.S)
+    html = re.sub(r'(<html[^>]*\blang=")[^"]*(")', rf"\g<1>{escape(language)}\g<2>", html, count=1)
+    path.write_text(html, encoding="utf-8")
 
 
 def _refs(refs: list) -> list[dict]:

@@ -8,6 +8,9 @@
 做什么：逐页打开站点，测量「字幕条之上的内容区」是否放得下（.stage-body 不允许内滚，
 元素不得越过内容区边界），可选把每页截图存到 --out。
 
+先做一致性守卫：用工作区 course.json 里的页面标题核对被服务的站点，防止端口被占用时
+审计打到别的课程 / 旧构建上给出假通过（返回码 2 表示站点与工作区不匹配）。
+
 依赖：playwright + chromium。缺失时打印「跳过」并返回 0——降级信息由调用方写入 qa-report。
 发现问题（溢出/越界）返回 1，并逐页列出，与 web-implementation.md 的「视觉验收」一节配套。
 """
@@ -78,6 +81,22 @@ def main() -> int:
             print(f"[跳过] 无法启动 chromium：{exc}")
             return 0
         page = browser.new_page(viewport={"width": 1600, "height": 1000})
+        expected_titles = [
+            str(slide.get("title"))
+            for chapter in chapters
+            for slide in chapter.get("slides") or []
+        ]
+        page.goto(f"{args.base_url}?v=fingerprint#c1/s1", wait_until="load")
+        page.wait_for_timeout(args.wait_ms)
+        body_text = page.inner_text("body")
+        missing = [title for title in expected_titles[:8] if title and title not in body_text]
+        if missing:
+            print("[错误] 站点与工作区不匹配：页面里找不到本工作区的页面标题。")
+            print(f"  - 期望（示例）：{'；'.join(missing[:3])}")
+            print(f"  - 实际地址：{args.base_url}")
+            print("  - 请确认 http.server 指向 <workspace>/presentation/dist，且刚重新构建过（端口被占用会打到别的站点）。")
+            browser.close()
+            return 2
         for chapter in chapters:
             chapter_number = int(str(chapter.get("id", "C0")).lstrip("C") or 0)
             for index, slide in enumerate(chapter.get("slides") or [], start=1):

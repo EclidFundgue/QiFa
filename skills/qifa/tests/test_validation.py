@@ -86,6 +86,18 @@ def skill_frontmatter_and_resource_index() -> None:
         elif span.endswith(".md") and "/" not in span and span not in WORKSPACE_MD:
             assert (SKILL / "references" / span).is_file(), f"SKILL.md 提到的 reference 不存在：{span}"
 
+    # 自包含：skill 文本不得把别的 skill 当作依赖
+    other_skills = (
+        "paper-explainer", "paper-assist", "beautiful-article", "web-design-engineer",
+        "web-video-presentation", "guided-code-learning", "gpt-image-2", "skill-creator",
+        "kb-retriever", "algorithm2plugin-skill", "grill-me", "grilling",
+    )
+    documents = [SKILL / "SKILL.md"] + sorted((SKILL / "references").glob("*.md"))
+    for document in documents:
+        content = document.read_text(encoding="utf-8")
+        for name in other_skills:
+            assert name not in content, f"{document.name} 引用了外部 skill：{name}"
+
 
 # --------------------------------------------------------------------------- #
 # 2. schema 可解析
@@ -133,6 +145,13 @@ def cli_smoke() -> None:
     visual_help = run(SCRIPTS / "visual_audit.py", "--help")
     assert visual_help.returncode == 0, visual_help.stderr
     assert "视觉验收" in visual_help.stdout, "visual_audit.py 缺少用途说明"
+    visual_src = (SCRIPTS / "visual_audit.py").read_text(encoding="utf-8")
+    assert "站点与工作区不匹配" in visual_src, "visual_audit.py 缺少站点一致性守卫（防审计打到别的站点）"
+    highlight_help = run(SCRIPTS / "highlight_audit.py", "--help")
+    assert highlight_help.returncode == 0, highlight_help.stderr
+    assert "高亮" in highlight_help.stdout, "highlight_audit.py 缺少用途说明"
+    assert (SKILL / "references" / "highlight-rules.md").is_file(), "缺少高亮规则文档"
+    assert "focusAt" in (SKILL / "assets" / "web-template" / "src" / "content" / "custom" / "focus.ts").read_text(encoding="utf-8"), "模板 focus.ts 缺少 focusAt"
     with tempfile.TemporaryDirectory() as tmp:
         missing = run(SCRIPTS / "pipeline.py", "validate", "curriculum", tmp)
         assert missing.returncode != 0, "空工作区校验本应失败"
@@ -159,6 +178,10 @@ def fixture_full_chain() -> None:
         assert build.returncode == 0, build.stdout + build.stderr
         site = run(SCRIPTS / "check_site.py", ws, "--no-build-check")
         assert site.returncode == 0, site.stdout + site.stderr
+
+        index_html = (ws / "presentation" / "index.html").read_text(encoding="utf-8")
+        assert "tiny-course：验证流水线的最小课程" in index_html, "首页 <title> 必须写入课程名"
+        assert '<html lang="zh-CN">' in index_html, "首页 lang 必须写入课程语言"
 
         # 重复 build 不得覆盖 Agent 写的定制组件
         custom = ws / "presentation/src/content/custom/S01.tsx"
@@ -315,6 +338,9 @@ def template_layout_contract() -> None:
     app = (root / "App.tsx").read_text(encoding="utf-8")
     for marker in ("app-shell", "course-column", "stage-body", "glossary-backdrop", "onClose"):
         assert marker in app, f"App.tsx 缺少布局契约：{marker}"
+    assert "<p>大纲</p>" in app and "课程大纲" not in app, "侧栏标题必须是「大纲」"
+    template_html = (SKILL / "assets" / "web-template" / "index.html").read_text(encoding="utf-8")
+    assert "QiFa 课程" not in template_html, "模板 index.html 不得写死「QiFa 课程」标题"
     assert "step={step}" in app, "App.tsx 必须把页内步进传给定制视觉组件"
     assert "sentence={sentence}" in app and "sentences={sentences}" in app, "App.tsx 必须把当前字幕传给定制视觉组件"
     custom_index = (root / "content" / "custom" / "index.ts").read_text(encoding="utf-8")
@@ -324,6 +350,10 @@ def template_layout_contract() -> None:
     assert "neutral" in focus_helper and "focusOf" in focus_helper, "缺少高亮语义工具（有指向才高亮，无指向保持中性）"
     web_ref = (SKILL / "references" / "web-implementation.md").read_text(encoding="utf-8")
     assert "高亮语义" in web_ref, "web-implementation.md 必须写明高亮语义"
+    visual_ref = (SKILL / "references" / "visual-design.md").read_text(encoding="utf-8")
+    for marker in ("## 架构图规范", "viewBox", "代码骨架", "自检"):
+        assert marker in visual_ref, f"visual-design.md 的架构图规范缺少自包含要素：{marker}"
+    assert "paper-explainer" not in visual_ref, "架构图规范不得引用外部 skill"
     stage = (root / "components" / "Stage.tsx").read_text(encoding="utf-8")
     assert "stage-area" in stage and "stage-fitter" in stage, "Stage.tsx 缺少舞台三层结构"
     cursor = (root / "hooks" / "useCourseCursor.ts").read_text(encoding="utf-8")

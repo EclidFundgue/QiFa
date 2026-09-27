@@ -1,0 +1,21 @@
+name: dynamicvla-paper
+mode: development
+input:
+  paper: https://arxiv.org/abs/2601.22153
+  repo: https://github.com/hzxie/DynamicVLA
+config:
+  language: zh-CN
+  duration: 45
+  visual_style: engineering-blueprint
+  depth: deep
+  audience: 具备深度学习与机器人学习基础、想复现与微调 VLA 模型（DynamicVLA 等）的研究者
+  goal: 讲清 DynamicVLA 的问题设定与三大设计（紧凑 VLA、连续推理、潜空间动作流式），能对照官方实现定位训练、推理与仿真评测的关键模块
+  prerequisites:
+    - 深度学习与 Transformer 基础
+    - VLA 与模仿学习（行为克隆、动作分块）基本概念
+    - 机器人操作与仿真评测基本术语
+  policies: {duration_tolerance: 0.3, max_repair_attempts: 2}
+expect:
+  no_blockers: true
+  stages_done: [intake, source-analysis, curriculum, chapter-design, narrative, visual-storyboard, web-generation, automated-review, package]
+  outline: {min_chapters: 5, max_chapters: 7, objectives_covered: true}

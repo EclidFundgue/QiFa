@@ -52,7 +52,7 @@ python3 <skill>/scripts/pipeline.py advance  --stage <stage>
 ## 修复与降级
 
 - `blocker`：结构/schema 失败、引用指向不存在、链接断、资源缺失、构建失败。必须修；修不动则终止。
-- `warning`：语义问题、时长偏差 > `duration_tolerance`、视频缺失降级、低风险一致性问题。**不修也可以**，但必须写进 `review/qa-report.md`，课件首屏显示"存在降级"提示。
+- `warning`：语义问题、讲稿落在所选档位软范围之外（先按讲解深度增删，禁止凑时长；仍不满足则调整档位并记录降级）、视频缺失降级、低风险一致性问题。**不修也可以**，但必须写进 `review/qa-report.md`，课件首屏显示“存在降级”提示。
 - `info`：建议项，仅记录。
 - 所有降级写入 `run-state` 对应阶段的 `degradations[]`，最终汇总进 `qa-report.json`。
 

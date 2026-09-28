@@ -1,0 +1,20 @@
+name: sam2-paper
+mode: development
+input:
+  paper: https://arxiv.org/abs/2408.00714
+config:
+  language: zh-CN
+  duration: 45
+  visual_style: scientific-editorial
+  depth: deep
+  audience: 具备深度学习与计算机视觉基础、想理解 SAM 2 方法并能讲给别人听的研究生与工程师
+  goal: 讲清 SAM 2 的问题设定、流式记忆架构（streaming memory）、数据引擎（SA-V）与关键实验证据，让学习者能用自己的话把方法与结论讲清楚
+  prerequisites:
+    - 深度学习与 Transformer 基础（注意力、可变形注意力、位置编码）
+    - 计算机视觉基础（图像分割与目标跟踪的基本术语）
+    - 预训练与微调的基本直觉（可选）
+  policies: {duration_tolerance: 0.3, max_repair_attempts: 2}
+expect:
+  no_blockers: true
+  stages_done: [intake, source-analysis, curriculum, chapter-design, narrative, visual-storyboard, web-generation, automated-review, package]
+  outline: {min_chapters: 5, max_chapters: 7, objectives_covered: true}

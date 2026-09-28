@@ -1,0 +1,21 @@
+name: pir2-paper
+mode: development
+input:
+  paper: https://arxiv.org/abs/2607.26055
+  repo: https://github.com/pi-r2-flow/pi-r2-flow
+config:
+  language: zh-CN
+  duration: 45
+  visual_style: engineering-blueprint
+  depth: deep
+  audience: 具备深度学习与机器人学习基础、想复现与微调 πR² 等实时流策略（VLA）的研究者
+  goal: 讲清 πR² 的动机（动作分块开放环导致的反应性差与延迟）与两大机制（proprioception-reactive diffusion forcing 快慢通道 + latency-adaptive flow schedule），能对照官方实现定位训练/推理的关键模块并完成复现路径
+  prerequisites:
+    - 深度学习与 Transformer 基础
+    - 模仿学习与 VLA（行为克隆、动作分块、异步推理）基本概念
+    - 扩散与流匹配（diffusion / flow matching / diffusion forcing）基本概念
+  policies: {duration_tolerance: 0.3, max_repair_attempts: 2}
+expect:
+  no_blockers: true
+  stages_done: [intake, source-analysis, curriculum, chapter-design, narrative, visual-storyboard, web-generation, automated-review, package]
+  outline: {min_chapters: 5, max_chapters: 7, objectives_covered: true}

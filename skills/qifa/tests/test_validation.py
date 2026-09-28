@@ -269,6 +269,39 @@ def stage_scoped_warnings() -> None:
 
 
 @case
+def duration_soft_range() -> None:
+    """时长是软范围且相邻档位重叠；范围外才告警，回填数字只是 info。"""
+    from estimate_duration import duration_range, within_duration_range
+
+    assert duration_range(20) == (15.0, 35.0)
+    assert duration_range(45) == (30.0, 65.0)
+    assert duration_range(90) == (60.0, 140.0)
+    # 相邻档位重叠：32 分钟既属于短档也属于中档，62 分钟既属于中档也属于长档
+    assert within_duration_range(32, 20) and within_duration_range(32, 45)
+    assert within_duration_range(62, 45) and within_duration_range(62, 90)
+    # 自定义档位退化为 ±tolerance
+    low, high = duration_range(5)
+    assert low < 5 < high
+    assert not within_duration_range(70, 45)
+
+    with tempfile.TemporaryDirectory() as tmp:
+        ws = Path(tmp) / "ws"
+        shutil.copytree(FIXTURE, ws)
+        # fixture：目标 5 分钟、讲稿 3.9 分钟，自定义范围 3.5–6.5 内 → 无问题
+        ok = run(SCRIPTS / "validate_course.py", ws, "--stage", "narrative")
+        assert ok.returncode == 0, ok.stdout + ok.stderr
+        assert "PED-DURATION" not in ok.stdout, ok.stdout
+        # 改成 45 分钟档后 3.9 分钟落在软范围（30–65）之外 → warning，且提示按深度增删而非凑时长
+        project = (ws / "project.yaml").read_text(encoding="utf-8")
+        (ws / "project.yaml").write_text(
+            project.replace("target_minutes: 5", "target_minutes: 45"), encoding="utf-8"
+        )
+        out = run(SCRIPTS / "validate_course.py", ws, "--stage", "narrative")
+        assert "PED-DURATION" in out.stdout, out.stdout
+        assert "软范围" in out.stdout and "不要为凑时长" in out.stdout, out.stdout
+
+
+@case
 def point_length_rule() -> None:
     """讲点只放关键词：超过 42 字（公式除外）给 CHAP-TEXT 警告。"""
     with tempfile.TemporaryDirectory() as tmp:

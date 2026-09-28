@@ -17,6 +17,7 @@
 
 - **数据驱动**（默认）：`title / concept / comparison / summary / video` 由渲染器按数据渲染。
 - **文本页示意图**：`concept / comparison / summary` 默认走示意图组件（时间线 / 对比列 / 收束链，见模板 `assets/web-template/src/content/custom/PointFlow.tsx`），讲点只放关键词；不要退化成文字列表。
+- **大图页（论文原图 / 图表）**：默认渲染器的 `ChartZoom` 不限制图片高度，matplotlib 原图的宽高比会把内容区撑到溢出；登记了 `image` / `chart` 的页面应提供定制组件，给 `img` 设 `max-height: 250–300px`（保留图注与来源），再用 `visual_audit.py` 复验。挂了原图的文本页不要再注册 `PointFlow`（它不渲染 `visuals`）。
 - **定制 TSX**（例外）：`diagram / formula-steps / code-walkthrough` 等复杂视觉，允许每页一个 TSX 覆盖默认渲染。
 - 定制组件收到 `(slide, step, sentence, sentences)`：
   - `sentence` / `sentences` 是当前字幕与整页字幕列表——**图示高亮必须跟随当前这条字幕**（例如字幕讲到“相机+指令”就高亮这两个输入框，讲到“本体状态”就切到状态框）；字幕是拆句后的最小推进单位，也是讲稿的真相源。

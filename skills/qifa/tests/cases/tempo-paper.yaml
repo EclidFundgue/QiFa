@@ -1,0 +1,21 @@
+name: tempo-paper
+mode: development
+input:
+  paper: https://arxiv.org/abs/2609.16864
+  repo: https://github.com/tempo-robot/TEMPO
+config:
+  language: zh-CN
+  duration: 45
+  visual_style: engineering-blueprint
+  depth: deep
+  audience: 具备深度学习与机器人学习基础、想复现与微调 VLA（TEMPO 等）动态操作模型的研究者
+  goal: 讲清 TEMPO 的两大失效模式（motion ambiguity / state aliasing）与两个时间信号（TEMPOMOT / TEMPOACT），能对照官方实现定位训练与推理的关键模块
+  prerequisites:
+    - 深度学习与 Transformer 基础
+    - 模仿学习与 VLA（行为克隆、动作分块、异步推理）基本概念
+    - 机器人操作与动态任务评测基本术语
+  policies: {duration_tolerance: 0.3, max_repair_attempts: 2}
+expect:
+  no_blockers: true
+  stages_done: [intake, source-analysis, curriculum, chapter-design, narrative, visual-storyboard, web-generation, automated-review, package]
+  outline: {min_chapters: 5, max_chapters: 7, objectives_covered: true}

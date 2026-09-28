@@ -16,7 +16,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from lib.workbench import STAGES, Workspace, problem  # noqa: E402
-from estimate_duration import estimate  # noqa: E402
+from estimate_duration import duration_range, estimate, within_duration_range  # noqa: E402
 
 DEEP_STAGES = {"narrative", "visual-storyboard", "web-generation", "automated-review", "package"}
 
@@ -274,25 +274,14 @@ def _check_glossary(ws: Workspace, problems: list[dict]) -> None:
 
 def _check_duration(ws: Workspace, outline: dict, problems: list[dict]) -> None:
     result = estimate(ws)
-    declared_total = float(outline.get("duration_estimate") or 0)
-    if declared_total and result["total"] and abs(declared_total - result["total"]) > 1.5:
-        problems.append(
-            problem(
-                "pedagogy",
-                "PED-DURATION",
-                "warning",
-                "narrative",
-                "plan/course-outline.json",
-                f"大纲声明 {declared_total:.0f} 分钟，讲稿换算 {result['total']:.0f} 分钟，差异超过 1.5 分钟",
-                "按讲稿重算每章 duration_estimate",
-            )
-        )
+    if not result["total"]:
+        return
     project = ws.load_project() or {}
     target = ((project.get("duration") or {}).get("target_minutes")) or 0
     tolerance = ((project.get("policies") or {}).get("duration_tolerance")) or 0.3
-    if target and result["total"]:
-        deviation = abs(result["total"] - float(target)) / float(target)
-        if deviation > float(tolerance):
+    if target:
+        low, high = duration_range(float(target), float(tolerance))
+        if not within_duration_range(result["total"], float(target), float(tolerance)):
             problems.append(
                 problem(
                     "pedagogy",
@@ -300,9 +289,25 @@ def _check_duration(ws: Workspace, outline: dict, problems: list[dict]) -> None:
                     "warning",
                     "narrative",
                     "script/",
-                    f"讲稿换算 {result['total']:.0f} 分钟，目标 {target} 分钟，偏差 {deviation:.0%} 超过容差 {float(tolerance):.0%}",
+                    f"讲稿换算 {result['total']:.0f} 分钟，落在所选档位（{float(target):.0f}）的软范围 {low:.0f}–{high:.0f} 分钟之外。"
+                    "先按讲解深度评审哪些页需要展开、哪些页冗余，不要为凑时长改动讲稿；仍不合适时调整档位并在 qa-report 记录降级。",
+                    "先做深度评审（哪些知识点没讲透 / 哪些重复），再考虑换档",
                 )
             )
+    declared_total = float(outline.get("duration_estimate") or 0)
+    if declared_total and abs(declared_total - result["total"]) > 1.5:
+        problems.append(
+            problem(
+                "pedagogy",
+                "PED-DURATION-BACKFILL",
+                "info",
+                "narrative",
+                "plan/course-outline.json",
+                f"大纲声明 {declared_total:.0f} 分钟，讲稿实测 {result['total']:.0f} 分钟。"
+                "请把 duration_estimate 回填为实测值；回填只更新数字，不作为增删讲稿的理由。",
+                "按实测回填每章与总计时长",
+            )
+        )
 
 
 def main() -> int:

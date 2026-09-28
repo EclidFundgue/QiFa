@@ -26,6 +26,26 @@ MATH_RE = re.compile(r"\$\$.*?\$\$|\$[^$\n]+\$", re.DOTALL)
 HAN_RE = re.compile(r"[\u3400-\u9fff]")
 WORD_RE = re.compile(r"[A-Za-z][A-Za-z'\-]*")
 
+# 时长档位：档位中心 -> 软范围。相邻范围刻意重叠（30–35、60–65），
+# 让“讲透为准”的落点不必撞档位边界；duration 不是验收数字。
+DURATION_TIERS: dict[float, tuple[float, float]] = {
+    20: (15.0, 35.0),
+    45: (30.0, 65.0),
+    90: (60.0, 140.0),
+}
+
+
+def duration_range(target: float, tolerance: float = 0.3) -> tuple[float, float]:
+    """所选档位的软范围；非标准档位退化为 target ± tolerance。"""
+    if target in DURATION_TIERS:
+        return DURATION_TIERS[target]
+    return (target * (1.0 - tolerance), target * (1.0 + tolerance))
+
+
+def within_duration_range(total: float, target: float, tolerance: float = 0.3) -> bool:
+    low, high = duration_range(target, tolerance)
+    return low <= total <= high
+
 
 def clean(text: str) -> str:
     text = FENCE_RE.sub(" ", text)

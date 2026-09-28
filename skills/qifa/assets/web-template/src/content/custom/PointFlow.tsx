@@ -82,7 +82,6 @@ function nodeStyle(focus: "neutral" | "on" | "off"): CSSProperties {
 
 /** 通用示意图：文本页只放关键词，版式按页面类型选（时间线 / 对比列 / 收束链 / 卡片网格）。 */
 export default function PointFlow({ slide, sentence, sentences }: Props) {
-  const current = sentences[sentence] ?? "";
   const detect = (text: string) => {
     if (/下一页|下一章|谢谢/.test(text)) return STOP;
     return focusIndex(slide.points, text);

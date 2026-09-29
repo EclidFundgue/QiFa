@@ -147,6 +147,7 @@ def cli_smoke() -> None:
     assert "视觉验收" in visual_help.stdout, "visual_audit.py 缺少用途说明"
     visual_src = (SCRIPTS / "visual_audit.py").read_text(encoding="utf-8")
     assert "站点与工作区不匹配" in visual_src, "visual_audit.py 缺少站点一致性守卫（防审计打到别的站点）"
+    assert "--browser" in visual_help.stdout, "visual_audit.py 必须支持系统浏览器回退（--browser）"
     highlight_help = run(SCRIPTS / "highlight_audit.py", "--help")
     assert highlight_help.returncode == 0, highlight_help.stderr
     assert "高亮" in highlight_help.stdout, "highlight_audit.py 缺少用途说明"
@@ -251,6 +252,39 @@ def deps_contract() -> None:
 
 
 @case
+def npm_output_encoding() -> None:
+    """中文 Windows 下 npm 输出可能是 GBK：_run_npm 必须显式 UTF-8 解码，避免 reader 线程崩溃。"""
+    import build_site as build_site_mod
+
+    with tempfile.TemporaryDirectory() as tmp:
+        presentation = Path(tmp) / "presentation"
+        (presentation / "node_modules").mkdir(parents=True)
+        captured: list[dict] = []
+
+        class Result:
+            returncode = 0
+            stdout = ""
+            stderr = ""
+
+        def fake_run(cmd, **kwargs):
+            captured.append(kwargs)
+            return Result()
+
+        original_which = build_site_mod.shutil.which
+        original_run = build_site_mod.subprocess.run
+        try:
+            build_site_mod.shutil.which = lambda name: "npm"  # type: ignore[assignment]
+            build_site_mod.subprocess.run = fake_run  # type: ignore[assignment]
+            problems = build_site_mod._run_npm(presentation)
+        finally:
+            build_site_mod.shutil.which = original_which
+            build_site_mod.subprocess.run = original_run
+        assert problems == [], problems
+        assert captured and captured[0].get("encoding") == "utf-8", captured
+        assert captured[0].get("errors") == "replace", captured
+
+
+@case
 def stage_scoped_warnings() -> None:
     """curriculum 不等于 chapter-design：提前评估“章节计划缺失”会污染降级清单。"""
     with tempfile.TemporaryDirectory() as tmp:
@@ -330,7 +364,7 @@ def sentences_splitter() -> None:
         return  # 环境没有 Node 时跳过；其余 P0 项不依赖它
     script = (
         "import { splitSentences } from "
-        + json.dumps(str(SKILL / "assets/web-template/src/content/sentences.ts"))
+        + json.dumps((SKILL / "assets/web-template/src/content/sentences.ts").as_uri())
         + ";\n"
         "const basic = splitSentences('甲。乙！丙？');\n"
         "if (basic.length !== 3) throw new Error('句数应为 3，实际 ' + basic.length);\n"

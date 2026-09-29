@@ -1,7 +1,7 @@
 name: openpi-repo
 mode: development
 input:
-  repo: /home/ls/projects/openpi
+  repo: https://github.com/Physical-Intelligence/openpi
 config:
   language: zh-CN
   duration: 45

@@ -3,7 +3,7 @@
 
 用法：
     python3 -m http.server 8791 --directory <ws>/presentation/dist &
-    python3 visual_audit.py <workspace> [--base-url http://127.0.0.1:8791/] [--out <dir>]
+    python3 visual_audit.py <workspace> [--base-url http://127.0.0.1:8791/] [--out <dir>] [--browser auto|chromium|msedge|chrome]
 
 做什么：逐页打开站点，测量「字幕条之上的内容区」是否放得下（.stage-body 不允许内滚，
 元素不得越过内容区边界），可选把每页截图存到 --out。
@@ -11,7 +11,9 @@
 先做一致性守卫：用工作区 course.json 里的页面标题核对被服务的站点，防止端口被占用时
 审计打到别的课程 / 旧构建上给出假通过（返回码 2 表示站点与工作区不匹配）。
 
-依赖：playwright + chromium。缺失时打印「跳过」并返回 0——降级信息由调用方写入 qa-report。
+依赖：playwright + 浏览器。浏览器按 `--browser` 选择：`auto`（默认）依次尝试
+playwright 自带的 chromium、系统 Edge、系统 Chrome；playwright 包缺失或全部浏览器
+启动失败时才打印「跳过」并返回 0——降级信息由调用方写入 qa-report。
 发现问题（溢出/越界）返回 1，并逐页列出，与 web-implementation.md 的「视觉验收」一节配套。
 """
 
@@ -19,8 +21,64 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import pathlib
+import shutil
 import sys
+
+BROWSER_CANDIDATES: dict[str, list[str | None]] = {
+    "msedge": [
+        os.environ.get("MSEDGE_PATH"),
+        shutil.which("msedge"),
+        r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+        r"C:\Program Files\Microsoft\Edge\Application\msedge.exe",
+        os.path.expandvars(r"%LOCALAPPDATA%\Microsoft\Edge\Application\msedge.exe"),
+        "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
+        "/usr/bin/microsoft-edge",
+    ],
+    "chrome": [
+        os.environ.get("CHROME_PATH"),
+        shutil.which("chrome"),
+        shutil.which("google-chrome"),
+        shutil.which("chromium"),
+        shutil.which("chromium-browser"),
+        r"C:\Program Files\Google\Chrome\Application\chrome.exe",
+        r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+        os.path.expandvars(r"%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe"),
+        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+        "/usr/bin/google-chrome",
+    ],
+}
+
+
+def find_browser(name: str) -> str | None:
+    for candidate in BROWSER_CANDIDATES.get(name, []):
+        if candidate and pathlib.Path(candidate).is_file():
+            return candidate
+    return None
+
+
+def launch_browser(playwright, browser: str):
+    """返回 (browser, 说明) 或 (None, 错误说明)；auto 按 chromium → msedge → chrome 顺序回退。"""
+    attempts: list[tuple[str, str | None]] = []
+    if browser in ("auto", "chromium"):
+        attempts.append(("chromium", None))
+    for name in ("msedge", "chrome"):
+        if browser in ("auto", name):
+            attempts.append((name, find_browser(name)))
+    errors: list[str] = []
+    for name, executable in attempts:
+        if name != "chromium" and executable is None:
+            errors.append(f"{name}: 未找到可执行文件")
+            continue
+        kwargs: dict = {"args": ["--no-sandbox"]}
+        if executable:
+            kwargs["executable_path"] = executable
+        try:
+            return playwright.chromium.launch(**kwargs), f"{name}（{executable or 'playwright 内置'}）"
+        except Exception as exc:  # noqa: BLE001 - 逐个回退，最后统一降级
+            errors.append(f"{name}: {type(exc).__name__}: {exc}")
+    return None, "；".join(errors)
 
 OVERFLOW_SCRIPT = """
 () => {
@@ -51,6 +109,12 @@ def main() -> int:
     parser.add_argument("--base-url", default="http://127.0.0.1:8791/")
     parser.add_argument("--out", default=None, help="截图输出目录（可选）")
     parser.add_argument("--wait-ms", type=int, default=450)
+    parser.add_argument(
+        "--browser",
+        default="auto",
+        choices=["auto", "chromium", "msedge", "chrome"],
+        help="浏览器选择：auto 依次尝试内置 chromium / 系统 Edge / 系统 Chrome",
+    )
     args = parser.parse_args()
 
     ws = pathlib.Path(args.workspace).expanduser()
@@ -75,11 +139,11 @@ def main() -> int:
     problems: list[str] = []
     checked = 0
     with sync_playwright() as p:
-        try:
-            browser = p.chromium.launch(args=["--no-sandbox"])
-        except Exception as exc:  # noqa: BLE001 - 浏览器缺失按降级处理
-            print(f"[跳过] 无法启动 chromium：{exc}")
+        browser, detail = launch_browser(p, args.browser)
+        if browser is None:
+            print(f"[跳过] 无法启动浏览器（{detail}）")
             return 0
+        print(f"[浏览器] {detail}")
         page = browser.new_page(viewport={"width": 1600, "height": 1000})
         expected_titles = [
             str(slide.get("title"))

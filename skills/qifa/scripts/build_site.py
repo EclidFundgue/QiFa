@@ -280,6 +280,8 @@ def _run_npm(presentation: Path) -> list[dict]:
                 cwd=presentation,
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 timeout=900,
             )
             if install.returncode != 0:
@@ -294,7 +296,7 @@ def _run_npm(presentation: Path) -> list[dict]:
                     )
                 ]
         build = subprocess.run(
-            [npm, "run", "build"], cwd=presentation, capture_output=True, text=True, timeout=900
+            [npm, "run", "build"], cwd=presentation, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=900
         )
         if build.returncode != 0:
             problems.append(

@@ -18,6 +18,7 @@
 - **数据驱动**（默认）：`title / concept / comparison / summary / video` 由渲染器按数据渲染。
 - **文本页示意图**：`concept / comparison / summary` 默认走示意图组件（时间线 / 对比列 / 收束链，见模板 `assets/web-template/src/content/custom/PointFlow.tsx`），讲点只放关键词；不要退化成文字列表。
 - **大图页（论文原图 / 图表）**：默认渲染器的 `ChartZoom` 不限制图片高度，matplotlib 原图的宽高比会把内容区撑到溢出；登记了 `image` / `chart` 的页面应提供定制组件，给 `img` 设 `max-height: 250–300px`（保留图注与来源），再用 `visual_audit.py` 复验。挂了原图的文本页不要再注册 `PointFlow`（它不渲染 `visuals`）。
+- **代码走读页**：可复用模板 `assets/web-template/src/content/custom/CodeFlow.tsx`——讲点排成带连接线的符号流程，**按字幕关键词高亮当前讲点**，有 `steps` 时未到分组压暗；在 `custom/index.ts` 注册即可。
 - **定制 TSX**（例外）：`diagram / formula-steps / code-walkthrough` 等复杂视觉，允许每页一个 TSX 覆盖默认渲染。
 - 定制组件收到 `(slide, step, sentence, sentences)`：
   - `sentence` / `sentences` 是当前字幕与整页字幕列表——**图示高亮必须跟随当前这条字幕**（例如字幕讲到“相机+指令”就高亮这两个输入框，讲到“本体状态”就切到状态框）；字幕是拆句后的最小推进单位，也是讲稿的真相源。
@@ -56,6 +57,7 @@ python3 <skill>/scripts/visual_audit.py <workspace> --out /tmp/qifa-shots
 - 端口被占用会审计到别的站点：脚本带一致性守卫（比对工作区页面标题），不匹配时以退出码 2 终止——先修服务器/构建，不要当成"跳过"。
 - 判定：`.stage-body` 的 `scrollHeight` 必须等于 `clientHeight`（不允许内容区出现内滚）；元素不得越过内容区边界。
 - 定制视觉的高亮按 `references/highlight-rules.md` 单独检查：`python3 <skill>/scripts/highlight_audit.py <workspace>`（重放字幕→焦点序列，0 违规才算过）。
+- 浏览器选择：`--browser auto`（默认）依次尝试 playwright 内置 chromium、系统 Edge、系统 Chrome；也可显式指定 `msedge` / `chrome`（可用 `MSEDGE_PATH` / `CHROME_PATH` 覆盖路径）。三种都不可用或没装 playwright 时才降级为 info。
 - 设计画布 1280×720，扣掉页面内边距与字幕区后，**内容区约 1136×552**；定制 TSX 按这个尺寸设计。
 - 4 条及以上讲点的页面由 `SlideRenderer` 自动加 `points-dense` 缩排（历史溢出场景：4 条长讲点被字幕条压住）。
 - 没有浏览器依赖时降级为 `info`，在 qa-report 里注明“未做人工/无头视觉验收”，不阻塞发布。
